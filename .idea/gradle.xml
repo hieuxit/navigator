@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="/Data/work/workspace/fruitful/navigator" />
+            <option value="/Data/work/workspace/fruitful/navigator/navigator-annotations" />
+            <option value="/Data/work/workspace/fruitful/navigator/navigator-lib" />
+            <option value="/Data/work/workspace/fruitful/navigator/navigator-processor" />
+            <option value="/Data/work/workspace/fruitful/navigator/sample" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

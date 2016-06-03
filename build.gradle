@@ -1,0 +1,62 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha2'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.0'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+ext {
+    minSdkVersion = 9
+    targetSdkVersion = 23
+    compileSdkVersion = 23
+    buildToolsVersion = '23.0.2'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+}
+
+ext.deps = [
+        // Android
+        android            : 'com.google.android:android:4.1.1.4',
+        support_v4         : 'com.google.android:support-v4:r7',
+        appcompat_v7       : 'com.android.support:appcompat-v7:23.4.0',
+        support_annotations: 'com.android.support:support-annotations:23.4.0',
+        // Processor
+        javapoet           : 'com.squareup:javapoet:1.7.0',
+
+        // Test dependencies
+        junit              : 'junit:junit:4.12',
+        mockito            : 'org.mockito:mockito-all:1.10.19',
+        compiletesting     : 'com.google.testing.compile:compile-testing:0.7',
+]
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// configure Java projects
+[":navigator-annotations", ":navigator-processor"].each { name ->
+    project(name) {
+
+        apply plugin: 'provided-base'
+        apply plugin: 'java'
+
+        sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
+        targetCompatibility = rootProject.ext.targetCompatibilityVersion
+    }
+}
