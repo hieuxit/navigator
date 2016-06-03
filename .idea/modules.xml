@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file:///Data/work/workspace/fruitful/navigator/navigator.iml" filepath="/Data/work/workspace/fruitful/navigator/navigator.iml" />
+      <module fileurl="file:///Data/work/workspace/fruitful/navigator/navigator-annotations/navigator-annotations.iml" filepath="/Data/work/workspace/fruitful/navigator/navigator-annotations/navigator-annotations.iml" />
+      <module fileurl="file:///Data/work/workspace/fruitful/navigator/navigator-lib/navigator-lib.iml" filepath="/Data/work/workspace/fruitful/navigator/navigator-lib/navigator-lib.iml" />
+      <module fileurl="file:///Data/work/workspace/fruitful/navigator/navigator-processor/navigator-processor.iml" filepath="/Data/work/workspace/fruitful/navigator/navigator-processor/navigator-processor.iml" />
+      <module fileurl="file:///Data/work/workspace/fruitful/navigator/sample/sample.iml" filepath="/Data/work/workspace/fruitful/navigator/sample/sample.iml" />
+    </modules>
+  </component>
+</project>
