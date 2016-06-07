@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0-alpha2'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -49,13 +50,18 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+allprojects {
+    group = 'com.github.hieuxit'
+    version = "1.0"
+}
+
 // configure Java projects
 [":navigator-annotations", ":navigator-processor"].each { name ->
     project(name) {
 
+        apply plugin: 'maven'
         apply plugin: 'provided-base'
         apply plugin: 'java'
-
         sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
         targetCompatibility = rootProject.ext.targetCompatibilityVersion
     }

@@ -1,5 +1,3 @@
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-
 dependencies {
     compile project(':navigator-annotations')
     compile deps.javapoet
