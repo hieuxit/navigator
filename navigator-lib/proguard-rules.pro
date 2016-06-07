@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class io.fruitful.navigator.** { *; }
+-dontwarn io.fruitful.navigator.**
+-keep class **$HasNavigatorBinder { *; }
+-keep class **$NavigatorBinder { *; }
+
