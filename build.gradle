@@ -52,7 +52,7 @@ task clean(type: Delete) {
 
 allprojects {
     group = 'com.github.hieuxit'
-    version = "1.0"
+    version = "0.1"
 }
 
 // configure Java projects
