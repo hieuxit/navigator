@@ -21,7 +21,8 @@ public class NavigatorManager {
         Class<?> targetClass = target.getClass();
         Class<?> binderClass = findHasNavigatorBinder(targetClass);
         if (binderClass == null) {
-            throw new NullPointerException("apt navigator error. Check" + targetClass.getName() + "$HasNavigatorBinder class exists???");
+            // if class does not have {@link @HasNavigator} do nothing
+            return;
         }
         try {
             Method hasNavigatorMethod = binderClass.getMethod(BIND_METHOD_NAME, targetClass, NavigatorOwnerKind.class);
@@ -29,7 +30,7 @@ public class NavigatorManager {
                 hasNavigatorMethod.invoke(null, target, kind);
             }
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("apt navigator error. Check" + targetClass.getName() + "$HasNavigatorBinder class exists???");
+            throw new IllegalStateException("apt navigator error. Check " + targetClass.getName() + "$HasNavigatorBinder???");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
