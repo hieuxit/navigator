@@ -57,7 +57,6 @@ public class NavigatorProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("======================= Process @HasNavigator =======================");
         final TypeElement hasNavigatorAnnotation = elementUtils.getTypeElement(HasNavigator.class.getName());
         final Set<? extends Element> annotatedHasNavigatorFields = roundEnv.getElementsAnnotatedWith(hasNavigatorAnnotation);
         if (annotatedHasNavigatorFields.isEmpty()) {
@@ -65,8 +64,6 @@ public class NavigatorProcessor extends AbstractProcessor {
         }
 
         verifyFieldsAccessible(annotatedHasNavigatorFields);
-
-        note("Processing @HasNavigator" + annotatedHasNavigatorFields.size() + " fields");
 
         Map<Element, List<Element>> hasNavigatorByHostElement = new HashMap<>();
         for (Element hasNavigator : annotatedHasNavigatorFields) {
@@ -87,8 +84,6 @@ public class NavigatorProcessor extends AbstractProcessor {
             throw new RuntimeException("Failed writing class file", e);
         }
 
-
-        System.out.println("========= Process @RootNavigator, @OwnNavigator, @ParentNavigator ==========");
         final TypeElement rootNavigatorAnnotation = elementUtils.getTypeElement(RootNavigator.class.getName());
         final TypeElement parentNavigatorAnnotation = elementUtils.getTypeElement(ParentNavigator.class.getName());
         final TypeElement ownNavigatorAnnotation = elementUtils.getTypeElement(OwnNavigator.class.getName());
@@ -130,7 +125,6 @@ public class NavigatorProcessor extends AbstractProcessor {
         final String simpleClassName = binderNavigatorName(hostClassName);
         final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
 
-        note("writing class " + qualifiedClassName);
         JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(
                 qualifiedClassName, elements.toArray(new Element[elements.size()]));
 
@@ -163,7 +157,6 @@ public class NavigatorProcessor extends AbstractProcessor {
         final String simpleClassName = binderHasNavigatorName(hostClassName);
         final String qualifiedClassName = packageElement.getQualifiedName() + "." + simpleClassName;
 
-        note("writing class " + qualifiedClassName);
         JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(
                 qualifiedClassName, elements.toArray(new Element[elements.size()]));
 
