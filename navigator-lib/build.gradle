@@ -1,5 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+
+// For nexus
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+// For jitpack
+//apply plugin: 'com.github.dcendents.android-maven'
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.3'

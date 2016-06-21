@@ -3,14 +3,15 @@ package io.fruitful.navigator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import io.fruitful.navigator.internal.NavigatorManager;
-import io.fruitful.navigator.internal.NavigatorOwnerKind;
+import io.fruitful.navigator.internal.NavigatorFragmentDispatcher;
+import io.fruitful.navigator.internal.NavigatorFragmentInterface;
 
 /**
  * Created by hieuxit on 5/27/16.
  */
-public class NavigatorFragment extends Fragment {
-    private Navigator mNavigator;
+public class NavigatorFragment extends Fragment implements NavigatorFragmentInterface {
+
+    private NavigatorFragmentDispatcher<NavigatorFragment> dispatcher = new NavigatorFragmentDispatcher<>();
 
     /**
      * @return true if Fragment need interact with back command e.g: hide the popup layout,
@@ -20,37 +21,30 @@ public class NavigatorFragment extends Fragment {
         return false;
     }
 
-    public NavigatorActivity getBaseActivity() {
-        return (NavigatorActivity) getActivity();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        NavigatorActivity activity = getBaseActivity();
-        mNavigator = new Navigator(activity, getChildFragmentManager());
-        NavigatorManager.emitBindHasNavigator(this, NavigatorOwnerKind.NAVIGATOR_FRAGMENT);
+        dispatcher.onActivityCreated(this);
     }
 
+    @Override
     public Navigator getRootNavigator() {
-        return getBaseActivity().getNavigator();
+        return dispatcher.getRootNavigator();
     }
 
+    @Override
     public Navigator getParentNavigator() {
-        Fragment parentFragment = getParentFragment();
-        if (parentFragment == null) return getRootNavigator();
-        return ((NavigatorFragment) parentFragment).getOwnNavigator();
+        return dispatcher.getParentNavigator();
     }
 
+    @Override
     public Navigator getOwnNavigator() {
-        return mNavigator;
+        return dispatcher.getOwnNavigator();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mNavigator != null) {
-            mNavigator.destroy();
-        }
+        dispatcher.onDestroy();
     }
 }

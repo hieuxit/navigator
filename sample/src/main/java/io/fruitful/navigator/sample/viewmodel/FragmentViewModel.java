@@ -9,6 +9,7 @@ import io.fruitful.navigator.RootNavigator;
  * Created by hieuxit on 5/27/16.
  */
 public class FragmentViewModel {
+
     @RootNavigator
     Navigator mRootNavigator;
 

@@ -11,22 +11,35 @@ import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 
 import java.util.List;
 
+import io.fruitful.navigator.internal.NavigatorActivityInterface;
+import io.fruitful.navigator.internal.NavigatorFragmentInterface;
+
 /**
- * Created by hieuxit on 4/13/16.
+ *
  */
-public class Navigator {
-    private NavigatorActivity activity;
+public class Navigator<ActivityType extends FragmentActivity & NavigatorActivityInterface> {
+    private ActivityType activity;
     private FragmentManager fragmentManager;
 
-    public Navigator(NavigatorActivity activity, FragmentManager fragmentManager) {
+
+    public Navigator(ActivityType activity, FragmentManager fragmentManager) {
         this.activity = activity;
         this.fragmentManager = fragmentManager;
+    }
+
+    public static <ActivityType extends FragmentActivity & NavigatorActivityInterface> Navigator fromActivity(ActivityType activity) {
+        return new Navigator(activity, activity.getSupportFragmentManager());
+    }
+
+    public static <FragmentType extends Fragment & NavigatorFragmentInterface> Navigator fromFragment(FragmentType fragment) {
+        return new Navigator(fragment.getActivity(), fragment.getChildFragmentManager());
     }
 
     public static void openGooglePlay(Context context, String packageApp) {
@@ -105,22 +118,6 @@ public class Navigator {
         ft.commit();
     }
 
-//    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
-//                             LayoutType layoutType, boolean enableAnimation) {
-//        if (enableAnimation) {
-//            openFragment(fragment, contentId, backToCurrentFragment, layoutType, R.anim.slide_in_left,
-//                    R.anim.slide_out_right, R.anim.slide_in_left, R.anim.slide_out_right);
-//        } else {
-//            openFragment(fragment, contentId, backToCurrentFragment, layoutType, 0, 0, 0, 0);
-//        }
-//    }
-
-//    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
-//                             LayoutType layoutType) {
-//        openFragment(fragment, contentId, backToCurrentFragment, layoutType, true);
-//    }
-
-
     public NavigatorFragment getCurrentFragment(@IdRes int contentId) {
         return (NavigatorFragment) fragmentManager.findFragmentById(contentId);
     }
@@ -129,17 +126,12 @@ public class Navigator {
         boolean isNavigateFromActivity = activity.getSupportFragmentManager() == fragmentManager;
         if (!isBackStackEmpty() && !forceBack) {
             List<Fragment> fragments = fragmentManager.getFragments();
-            Fragment lastInFragment = null;
             if (fragments != null && fragments.size() > 0) {
-                // maybe this is not true, because fragment manager may add a new fragment to the last of list
-                lastInFragment = fragments.get(fragments.size() - 1);
-                if (lastInFragment != null && lastInFragment instanceof NavigatorFragment) {
-                    NavigatorFragment currentFragment = (NavigatorFragment) lastInFragment;
-                    Navigator parentNavigator = currentFragment.getParentNavigator();
-                    if (parentNavigator.isBackStackEmpty() || parentNavigator == this) {
-                        if (currentFragment.handleBackIfNeeded()) return true;
-                    } else if (!isNavigateFromActivity || !isRoot()) {
-                        parentNavigator.popBackStack();
+                Fragment lastInFragment = fragments.get(fragments.size() - 1);
+                if (lastInFragment != null && lastInFragment instanceof NavigatorFragmentInterface) {
+                    NavigatorFragmentInterface currentFragment = (NavigatorFragmentInterface) lastInFragment;
+                    // Check if current fragment need back
+                    if (currentFragment.handleBackIfNeeded()) {
                         return true;
                     }
                 }
@@ -172,7 +164,7 @@ public class Navigator {
         return fragmentManager.getBackStackEntryCount() <= 1;
     }
 
-    public void destroy() {
+    public void clean() {
         activity = null;
         fragmentManager = null;
     }
