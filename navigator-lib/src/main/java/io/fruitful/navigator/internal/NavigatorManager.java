@@ -21,7 +21,7 @@ public class NavigatorManager {
         Class<?> targetClass = target.getClass();
         Class<?> binderClass = findHasNavigatorBinder(targetClass);
         if (binderClass == null) {
-            // if class does not have {@link @HasNavigator} do nothing
+            // if class does not have @HasNavigator do nothing
             return;
         }
         try {

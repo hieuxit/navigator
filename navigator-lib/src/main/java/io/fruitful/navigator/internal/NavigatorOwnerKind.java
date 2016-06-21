@@ -1,7 +1,7 @@
 package io.fruitful.navigator.internal;
 
 import io.fruitful.navigator.Navigator;
-import io.fruitful.navigator.NavigatorActivity;
+import io.fruitful.navigator.NavigatorFragmentActivity;
 import io.fruitful.navigator.NavigatorFragment;
 
 /**
@@ -29,12 +29,12 @@ public enum NavigatorOwnerKind {
     NAVIGATOR_ACTIVITY {
         @Override
         public Navigator getRootNavigator(Object owner) {
-            return ((NavigatorActivity) owner).getNavigator();
+            return ((NavigatorFragmentActivity) owner).getNavigator();
         }
 
         @Override
         public Navigator getOwnNavigator(Object owner) {
-            return ((NavigatorActivity) owner).getNavigator();
+            return ((NavigatorFragmentActivity) owner).getNavigator();
         }
 
         @Override
