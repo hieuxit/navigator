@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'provided-base'
 
 // For nexus
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
@@ -27,7 +28,7 @@ android {
 
 dependencies {
     compile project(':navigator-annotations')
-    compile deps.appcompat_v7
+    provided deps.appcompat_v7
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
