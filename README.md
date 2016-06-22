@@ -33,12 +33,13 @@ getOwnNavigator().openFragment(fragment, R.id.sub_content, true, LayoutType.ADD,
 ```
 
 **In Other**
+
 Mark annotation `@HasNavigator` to a variable that contains Navigator object
 ```java
 @HasNavigator
 ActivityViewModel viewModel;
 ```
-Navigator object (in ActivityViewModel) can be one of @RootNavigator, @ParentNavigator, @OwnNavigator
+Navigator object (in ActivityViewModel) can be one of `@RootNavigator, @ParentNavigator, @OwnNavigator`
 ```java
 @RootNavigator
 Navigator rootNavigator;
