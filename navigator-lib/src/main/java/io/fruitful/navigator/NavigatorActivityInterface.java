@@ -1,4 +1,4 @@
-package io.fruitful.navigator.internal;
+package io.fruitful.navigator;
 
 import io.fruitful.navigator.Navigator;
 

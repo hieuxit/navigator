@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
-import io.fruitful.navigator.internal.NavigatorActivityDispatcher;
-import io.fruitful.navigator.internal.NavigatorActivityInterface;
-
 /**
  * Created by hieuxit on 5/27/16.
  */

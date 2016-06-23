@@ -41,10 +41,10 @@ public class ViewPagerItemFragment extends NavigatorFragment implements View.OnC
     public void onClick(View v) {
         int id = v.getId();
         NewFragment fragment = NewFragment.newInstance();
-        final int animEnter = R.anim.slide_in_right;
-        final int animExit = R.anim.slide_out_left;
-        final int animPopEnter = R.anim.slide_in_left;
-        final int animPopExit = R.anim.slide_out_right;
+        final int animEnter = R.anim.navigator_slide_in_right;
+        final int animExit = R.anim.navigator_slide_out_left;
+        final int animPopEnter = R.anim.navigator_slide_in_left;
+        final int animPopExit = R.anim.navigator_slide_out_right;
         switch (id) {
             case R.id.bt_add_inside:
                 // open inside current fragment must be use a container in fragment layout
