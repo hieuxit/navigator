@@ -28,7 +28,7 @@ android {
 
 dependencies {
     compile project(':navigator-annotations')
-    provided deps.appcompat_v7
+    compile deps.appcompat_v7
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'

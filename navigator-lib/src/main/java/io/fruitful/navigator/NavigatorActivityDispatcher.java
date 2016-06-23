@@ -1,8 +1,9 @@
-package io.fruitful.navigator.internal;
+package io.fruitful.navigator;
 
 import android.support.v4.app.FragmentActivity;
 
-import io.fruitful.navigator.Navigator;
+import io.fruitful.navigator.internal.NavigatorManager;
+import io.fruitful.navigator.internal.NavigatorOwnerKind;
 
 /**
  * Created by hieuxit on 6/16/16.

@@ -68,8 +68,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  compile 'io.fruitful.navigator:navigator:0.3'
-  apt 'io.fruitful.navigator:navigator-processor:0.3'
+  compile 'io.fruitful.navigator:navigator:0.4'
+  apt 'io.fruitful.navigator:navigator-processor:0.4'
 }
 ```
 
@@ -83,7 +83,7 @@ This dispatches an `Activity` or `Fragment` has navigators like our build-in `Na
 ```java
 public class OurActivity extends AnotherActivity implements NavigatorActivityInterface {
 
-    private NavigatorActivityDispatcher<NavigatorAppCompatActivity> dispatcher = new NavigatorActivityDispatcher<>();
+    private NavigatorActivityDispatcher<OurActivity> dispatcher = new NavigatorActivityDispatcher<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class OurActivity extends AnotherActivity implements NavigatorActivityInt
 #### Fragment
 
 ```java
-public class OurFragment extends Fragment implements NavigatorFragmentInterface {
+public class OurFragment extends AnotherFragment implements NavigatorFragmentInterface {
 
     private NavigatorFragmentDispatcher<OurFragment> dispatcher = new NavigatorFragmentDispatcher<>();
 

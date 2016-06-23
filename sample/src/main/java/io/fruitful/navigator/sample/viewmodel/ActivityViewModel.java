@@ -24,10 +24,10 @@ public class ActivityViewModel extends BaseObservable{
 
     private void addFragment(LayoutType type) {
         boolean enableAnimation = isAnimation;
-        int animEnter = enableAnimation ? R.anim.slide_in_right : 0;
-        int animExit = enableAnimation ? R.anim.slide_out_left : 0;
-        int animPopEnter = enableAnimation ? R.anim.slide_in_left : 0;
-        int animPopExit = enableAnimation ? R.anim.slide_out_right : 0;
+        int animEnter = enableAnimation ? R.anim.navigator_slide_in_right : 0;
+        int animExit = enableAnimation ? R.anim.navigator_slide_out_left : 0;
+        int animPopEnter = enableAnimation ? R.anim.navigator_slide_in_left : 0;
+        int animPopExit = enableAnimation ? R.anim.navigator_slide_out_right : 0;
 
         mRootNavigator.openFragment(CharacterFragment.newInstance(ch), R.id.content, true,
                 type, animEnter, animExit, animPopEnter, animPopExit);

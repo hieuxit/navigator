@@ -37,10 +37,10 @@ public class SimpleActivity extends NavigatorFragmentActivity implements View.On
             case R.id.bt_add:
             case R.id.bt_replace:
                 boolean enableAnimation = mCheckboxAnimation.isChecked();
-                int animEnter = enableAnimation ? R.anim.slide_in_right : 0;
-                int animExit = enableAnimation ? R.anim.slide_out_left: 0;
-                int animPopEnter = enableAnimation ? R.anim.slide_in_left : 0;
-                int animPopExit = enableAnimation ? R.anim.slide_out_right : 0;
+                int animEnter = enableAnimation ? R.anim.navigator_slide_in_right : 0;
+                int animExit = enableAnimation ? R.anim.navigator_slide_out_left : 0;
+                int animPopEnter = enableAnimation ? R.anim.navigator_slide_in_left : 0;
+                int animPopExit = enableAnimation ? R.anim.navigator_slide_out_right : 0;
 
                 getNavigator().openFragment(CharacterFragment.newInstance(ch), R.id.content, true,
                         id == R.id.bt_add ? LayoutType.ADD : LayoutType.REPLACE,

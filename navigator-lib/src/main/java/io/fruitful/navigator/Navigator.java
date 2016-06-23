@@ -1,12 +1,10 @@
 package io.fruitful.navigator;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
@@ -18,9 +16,6 @@ import android.text.TextUtils;
 
 import java.util.List;
 
-import io.fruitful.navigator.internal.NavigatorActivityInterface;
-import io.fruitful.navigator.internal.NavigatorFragmentInterface;
-
 /**
  *
  */
@@ -28,10 +23,17 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
     private ActivityType activity;
     private FragmentManager fragmentManager;
 
+    @IdRes
+    private int contentId;
+
+    @AnimRes
+    private int animEnter, animExit, animPopEnter, animPopExit;
 
     public Navigator(ActivityType activity, FragmentManager fragmentManager) {
         this.activity = activity;
         this.fragmentManager = fragmentManager;
+        setDefaultAnim(R.anim.navigator_slide_in_right, R.anim.navigator_slide_out_left,
+                R.anim.navigator_slide_in_left, R.anim.navigator_slide_out_right);
     }
 
     public static <ActivityType extends FragmentActivity & NavigatorActivityInterface> Navigator fromActivity(ActivityType activity) {
@@ -61,7 +63,6 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static void openOtherApp(Context context, String packageName) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         context.startActivity(intent);
@@ -98,6 +99,36 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         context.startActivity(intent);
     }
 
+    /**
+     * set default layout id whenever using a short version of {@link #openFragment(Fragment, int, boolean, LayoutType, int, int, int, int)}
+     * @param contentId your layout id to host fragment
+     */
+    public void setDefaultContentId(@IdRes int contentId) {
+        this.contentId = contentId;
+    }
+
+    /**
+     * set default animation when opening fragment
+     */
+    public void setDefaultAnim(@AnimRes int animEnter, @AnimRes int animExit,
+                               @AnimRes int animPopEnter, @AnimRes int animPopExit) {
+        this.animEnter = animEnter;
+        this.animExit = animExit;
+        this.animPopEnter = animPopEnter;
+        this.animPopExit = animPopExit;
+    }
+
+    /**
+     * @param fragment a fragment you next open
+     * @param contentId a layout id hosts the fragment
+     * @param backToCurrentFragment if you want after open new fragment and never back
+     *                              to current fragment set it false. default we will back to current fragment
+     * @param layoutType Add or Replace
+     * @param enter enter animation
+     * @param exit exit animation
+     * @param popEnter pop enter animation
+     * @param popExit pop exit animation
+     */
     public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
                              LayoutType layoutType, @AnimRes int enter, @AnimRes int exit,
                              @AnimRes int popEnter, @AnimRes int popExit) {
@@ -118,6 +149,62 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         ft.commit();
     }
 
+    /**
+     * a bit shorter of full version with enable or disable animation when changing fragment
+     */
+    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
+                             LayoutType layoutType, boolean animation) {
+        if (animation) {
+            openFragment(fragment, contentId, backToCurrentFragment, layoutType,
+                    animEnter, animExit, animPopEnter, animPopExit);
+        } else { // disable animation by call anim params as 0 all;
+            openFragment(fragment, contentId, backToCurrentFragment, layoutType,
+                    0, 0, 0, 0);
+        }
+    }
+
+    /**
+     * animation is not declared equivalent animation is enabled
+     */
+    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
+                             LayoutType layoutType) {
+        openFragment(fragment, contentId, backToCurrentFragment, layoutType, true);
+    }
+
+    /**
+     * Open a fragment on a default container id
+     */
+    public void openFragment(Fragment fragment, boolean backToCurrentFragment, LayoutType layoutType,
+                             boolean animation) {
+        if(this.contentId == 0){
+            throw new IllegalStateException("call setDefaultContentId first");
+        }
+        openFragment(fragment, this.contentId, backToCurrentFragment, layoutType, animation);
+    }
+
+    /**
+     * id is not declared equivalent default content id is used
+     * animation is not declared equivalent animation is enabled
+     */
+    public void openFragment(Fragment fragment, boolean backToCurrentFragment, LayoutType layoutType) {
+        if(this.contentId == 0){
+            throw new IllegalStateException("call setDefaultContentId first");
+        }
+        openFragment(fragment, this.contentId, backToCurrentFragment, layoutType, true);
+    }
+
+    /**
+     * id is not declared equivalent default content id is used
+     * animation is not declared equivalent animation is enabled
+     * backToCurrent is not declared equivalent will back
+     */
+    public void openFragment(Fragment fragment, LayoutType layoutType) {
+        openFragment(fragment, true, layoutType);
+    }
+
+    /**
+     * get current fragment laid out on layout with contentId
+     */
     public NavigatorFragment getCurrentFragment(@IdRes int contentId) {
         return (NavigatorFragment) fragmentManager.findFragmentById(contentId);
     }

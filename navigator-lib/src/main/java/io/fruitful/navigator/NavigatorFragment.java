@@ -3,9 +3,6 @@ package io.fruitful.navigator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import io.fruitful.navigator.internal.NavigatorFragmentDispatcher;
-import io.fruitful.navigator.internal.NavigatorFragmentInterface;
-
 /**
  * Created by hieuxit on 5/27/16.
  */
