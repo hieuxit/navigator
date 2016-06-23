@@ -69,7 +69,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
   compile 'io.fruitful.navigator:navigator:0.3'
-  apt 'io.fruitful.navigator:navigator-processor'
+  apt 'io.fruitful.navigator:navigator-processor:0.3'
 }
 ```
 
