@@ -2,6 +2,7 @@ package io.fruitful.navigator;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.view.animation.Animation;
 
 import io.fruitful.navigator.internal.NavigatorManager;
 import io.fruitful.navigator.internal.NavigatorOwnerKind;
@@ -15,10 +16,23 @@ public class NavigatorFragmentDispatcher<FragmentType extends Fragment & Navigat
     private Navigator navigator;
     private FragmentType fragment;
 
+    /**
+     * Disable animation for fragment when transiting
+     */
+    private boolean disableAnimation;
+
     public void onActivityCreated(FragmentType fragment) {
         this.fragment = fragment;
         this.navigator = Navigator.fromFragment(fragment);
         NavigatorManager.emitBindHasNavigator(fragment, NavigatorOwnerKind.NAVIGATOR_FRAGMENT);
+    }
+
+    public boolean isDisableAnimation() {
+        return disableAnimation;
+    }
+
+    public void setDisableAnimation(boolean disableAnimation) {
+        this.disableAnimation = disableAnimation;
     }
 
     public Navigator getRootNavigator() {
@@ -45,5 +59,15 @@ public class NavigatorFragmentDispatcher<FragmentType extends Fragment & Navigat
         if (navigator != null) {
             navigator.clean();
         }
+    }
+
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (disableAnimation) {
+            Animation a = new Animation() {
+            };
+            a.setDuration(0);
+            return a;
+        }
+        return null;
     }
 }
