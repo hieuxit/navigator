@@ -20,8 +20,14 @@ import java.util.List;
  *
  */
 public class Navigator<ActivityType extends FragmentActivity & NavigatorActivityInterface> {
+
     private ActivityType activity;
     private FragmentManager fragmentManager;
+    /**
+     * if true: No animation will return on {@link Fragment#onCreateAnimation(int, boolean, int)}
+     * So no animation for transition.
+     */
+    private boolean disableAnimation;
 
     @IdRes
     private int contentId;
@@ -99,8 +105,17 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         context.startActivity(intent);
     }
 
+    public boolean isDisableAnimation() {
+        return disableAnimation;
+    }
+
+    public void setDisableAnimation(boolean disableAnimation) {
+        this.disableAnimation = disableAnimation;
+    }
+
     /**
      * set default layout id whenever using a short version of {@link #openFragment(Fragment, int, boolean, LayoutType, int, int, int, int)}
+     *
      * @param contentId your layout id to host fragment
      */
     public void setDefaultContentId(@IdRes int contentId) {
@@ -119,19 +134,21 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
     }
 
     /**
-     * @param fragment a fragment you next open
-     * @param contentId a layout id hosts the fragment
+     * @param fragment              a fragment you next open
+     * @param contentId             a layout id hosts the fragment
      * @param backToCurrentFragment if you want after open new fragment and never back
      *                              to current fragment set it false. default we will back to current fragment
-     * @param layoutType Add or Replace
-     * @param enter enter animation
-     * @param exit exit animation
-     * @param popEnter pop enter animation
-     * @param popExit pop exit animation
+     * @param layoutType            Add or Replace
+     * @param enter                 enter animation
+     * @param exit                  exit animation
+     * @param popEnter              pop enter animation
+     * @param popExit               pop exit animation
      */
     public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
                              LayoutType layoutType, @AnimRes int enter, @AnimRes int exit,
                              @AnimRes int popEnter, @AnimRes int popExit) {
+        ensureAnimationForFragment(fragment);
+        ensureAnimationForFragmentsInBackstack(1);
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (enter > 0 || exit > 0 || popEnter > 0 || popExit > 0) {
             ft.setCustomAnimations(enter, exit, popEnter, popExit);
@@ -176,7 +193,7 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
      */
     public void openFragment(Fragment fragment, boolean backToCurrentFragment, LayoutType layoutType,
                              boolean animation) {
-        if(this.contentId == 0){
+        if (this.contentId == 0) {
             throw new IllegalStateException("call setDefaultContentId first");
         }
         openFragment(fragment, this.contentId, backToCurrentFragment, layoutType, animation);
@@ -187,7 +204,7 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
      * animation is not declared equivalent animation is enabled
      */
     public void openFragment(Fragment fragment, boolean backToCurrentFragment, LayoutType layoutType) {
-        if(this.contentId == 0){
+        if (this.contentId == 0) {
             throw new IllegalStateException("call setDefaultContentId first");
         }
         openFragment(fragment, this.contentId, backToCurrentFragment, layoutType, true);
@@ -203,24 +220,31 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
     }
 
     /**
+     * id is not declared equivalent default content id is used
+     * animation is not declared equivalent animation is enabled
+     * backToCurrent is not declared equivalent will back
+     */
+    public void openFragment(Fragment fragment, LayoutType layoutType, boolean animation) {
+        openFragment(fragment, this.contentId, true, layoutType, animation);
+    }
+
+    /**
      * get current fragment laid out on layout with contentId
      */
-    public NavigatorFragment getCurrentFragment(@IdRes int contentId) {
-        return (NavigatorFragment) fragmentManager.findFragmentById(contentId);
+    public Fragment getCurrentFragment(@IdRes int contentId) {
+        return fragmentManager.findFragmentById(contentId);
     }
 
     public boolean goBack(boolean forceBack) {
         boolean isNavigateFromActivity = activity.getSupportFragmentManager() == fragmentManager;
         if (!isBackStackEmpty() && !forceBack) {
-            List<Fragment> fragments = fragmentManager.getFragments();
-            if (fragments != null && fragments.size() > 0) {
-                Fragment lastInFragment = fragments.get(fragments.size() - 1);
-                if (lastInFragment != null && lastInFragment instanceof NavigatorFragmentInterface) {
-                    NavigatorFragmentInterface currentFragment = (NavigatorFragmentInterface) lastInFragment;
-                    // Check if current fragment need back
-                    if (currentFragment.handleBackIfNeeded()) {
-                        return true;
-                    }
+            Fragment lastInFragment = getLastFragmentInBackStack();
+
+            if (lastInFragment != null && lastInFragment instanceof NavigatorFragmentInterface) {
+                NavigatorFragmentInterface currentFragment = (NavigatorFragmentInterface) lastInFragment;
+                // Check if current fragment need back
+                if (currentFragment.handleBackIfNeeded()) {
+                    return true;
                 }
             }
         }
@@ -228,13 +252,64 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         boolean pop = (!isNavigateFromActivity && !isBackStackEmpty()) || (isNavigateFromActivity && !isRoot());
 
         if (pop) {
+            ensureAnimationForFragmentsInBackstack(2);
             popBackStack();
             return true;
         }
         return false;
     }
 
+    /**
+     * @param fragment: ensure disable animation for this fragment or not(from navigator)
+     * @return true: if fragment implement {@link NavigatorFragmentInterface} and we can set
+     * disableAnimation from Navigator. other wise return false
+     */
+    private boolean ensureAnimationForFragment(Fragment fragment) {
+        if (fragment instanceof NavigatorFragmentInterface) {
+            ((NavigatorFragmentInterface) fragment).getNavigatorDispatcher().setDisableAnimation(disableAnimation);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param count: number of fragment if backstack will apply disableAnimation flag from
+     *               Navigator. count is always 1 or 2.
+     *               When 1: when user open a new fragment.
+     *               Why and when 2: when we pop backstack the "last in" and the previous one
+     *               will create animation for popAnimIn and exitAnimOut effect.
+     *               So ensure enable or disable animation from navigator here must be apply to at least for 2 fragments.
+     *               <p>
+     *               -1: for all
+     *               positive: for count fragment
+     */
+    private void ensureAnimationForFragmentsInBackstack(int count) {
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments == null || fragments.size() == 0) return;
+        int sum = 0;
+        for (int size = fragments.size(), i = size - 1; i >= 0; i--) {
+            Fragment fragment = fragments.get(i);
+            if (fragment == null) continue;
+            if (ensureAnimationForFragment(fragment)) {
+                sum++;
+                if (sum == count) return;
+            }
+        }
+    }
+
+    private Fragment getLastFragmentInBackStack() {
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments == null || fragments.size() == 0) return null;
+        for (int size = fragments.size(), i = size - 1; i >= 0; i--) {
+            Fragment fragment = fragments.get(i);
+            if (fragment == null) continue;
+            if (fragment.isVisible()) return fragment;
+        }
+        return null;
+    }
+
     public void backToRoot() {
+        ensureAnimationForFragmentsInBackstack(-1);
         int backStackCount = fragmentManager.getBackStackEntryCount();
         if (!isRoot()) {
             for (int i = backStackCount - 1; i >= 1; i--) {
@@ -272,5 +347,17 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         if (finishCurrentActivity) {
             activity.finish();
         }
+    }
+
+    public void finishActivity() {
+        activity.finish();
+    }
+
+    public void openActivityForResult(Class<? extends Activity> activityClassToOpen, Bundle args, int requestCode) {
+        Intent intent = new Intent(activity, activityClassToOpen);
+        if (args != null) {
+            intent.putExtras(args);
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 }

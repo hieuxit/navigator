@@ -2,6 +2,7 @@ package io.fruitful.navigator;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.animation.Animation;
 
 /**
  * Created by hieuxit on 5/27/16.
@@ -30,6 +31,11 @@ public class NavigatorFragment extends Fragment implements NavigatorFragmentInte
     }
 
     @Override
+    public NavigatorFragmentDispatcher getNavigatorDispatcher() {
+        return dispatcher;
+    }
+
+    @Override
     public Navigator getParentNavigator() {
         return dispatcher.getParentNavigator();
     }
@@ -37,6 +43,11 @@ public class NavigatorFragment extends Fragment implements NavigatorFragmentInte
     @Override
     public Navigator getOwnNavigator() {
         return dispatcher.getOwnNavigator();
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return dispatcher.onCreateAnimation(transit, enter, nextAnim);
     }
 
     @Override

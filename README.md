@@ -68,8 +68,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  compile 'io.fruitful.navigator:navigator:0.5'
-  apt 'io.fruitful.navigator:navigator-processor:0.5'
+  compile 'io.fruitful.navigator:navigator:0.5.4'
+  apt 'io.fruitful.navigator:navigator-processor:0.5.4'
 }
 ```
 
