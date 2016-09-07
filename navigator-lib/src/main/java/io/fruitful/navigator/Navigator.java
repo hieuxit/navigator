@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.View;
 
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
     }
 
     /**
-     * set default layout id whenever using a short version of {@link #openFragment(Fragment, int, boolean, LayoutType, int, int, int, int)}
+     * set default layout id whenever using a short version of {@link #openFragment(Fragment, int, boolean, LayoutType, int, int, int, int, View, String)}
      *
      * @param contentId your layout id to host fragment
      */
@@ -143,10 +144,13 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
      * @param exit                  exit animation
      * @param popEnter              pop enter animation
      * @param popExit               pop exit animation
+     * @param sharedElement         For android 21 and above sharedElement is a view which is disappearing and appearing
+     * @param transitionName        A unique name for this transition
      */
     public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
                              LayoutType layoutType, @AnimRes int enter, @AnimRes int exit,
-                             @AnimRes int popEnter, @AnimRes int popExit) {
+                             @AnimRes int popEnter, @AnimRes int popExit,
+                             View sharedElement, String transitionName) {
         ensureAnimationForFragment(fragment);
         ensureAnimationForFragmentsInBackstack(1);
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -162,8 +166,19 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
         if (!backToCurrentFragment) {
             popBackStack();
         }
+        if (sharedElement != null) {
+            if (transitionName == null)
+                throw new NullPointerException("transitionName must be set and unique");
+            ft.addSharedElement(sharedElement, transitionName);
+        }
         ft.addToBackStack(Integer.toString((int) (2147483646.0D * Math.random())));
         ft.commit();
+    }
+
+    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
+                             LayoutType layoutType, @AnimRes int enter, @AnimRes int exit,
+                             @AnimRes int popEnter, @AnimRes int popExit) {
+        openFragment(fragment, contentId, backToCurrentFragment, layoutType, enter, exit, popEnter, popExit, null, null);
     }
 
     /**
@@ -173,11 +188,21 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
                              LayoutType layoutType, boolean animation) {
         if (animation) {
             openFragment(fragment, contentId, backToCurrentFragment, layoutType,
-                    animEnter, animExit, animPopEnter, animPopExit);
+                    animEnter, animExit, animPopEnter, animPopExit, null, null);
         } else { // disable animation by call anim params as 0 all;
             openFragment(fragment, contentId, backToCurrentFragment, layoutType,
-                    0, 0, 0, 0);
+                    0, 0, 0, 0, null, null);
         }
+    }
+
+    public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
+                             LayoutType layoutType, View sharedElement, String transitionName) {
+        if (sharedElement != null) {
+            if (transitionName == null)
+                throw new NullPointerException("transitionName must be set and unique");
+            openFragment(fragment, contentId, backToCurrentFragment, layoutType, 0, 0, 0, 0, sharedElement, transitionName);
+        }
+        openFragment(fragment, contentId, backToCurrentFragment, layoutType, true);
     }
 
     /**
@@ -186,6 +211,19 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
     public void openFragment(Fragment fragment, @IdRes int contentId, boolean backToCurrentFragment,
                              LayoutType layoutType) {
         openFragment(fragment, contentId, backToCurrentFragment, layoutType, true);
+    }
+
+    public void openFragment(Fragment fragment, boolean backToCurrentFragment, LayoutType layoutType,
+                             View sharedElement, String transitionName) {
+        if (this.contentId == 0) {
+            throw new IllegalStateException("call setDefaultContentId first");
+        }
+        if (sharedElement != null) {
+            if (transitionName == null)
+                throw new NullPointerException("transitionName must be set and unique");
+            openFragment(fragment, contentId, backToCurrentFragment, layoutType, 0, 0, 0, 0, sharedElement, transitionName);
+        }
+        openFragment(fragment, backToCurrentFragment, layoutType, true);
     }
 
     /**
@@ -208,6 +246,11 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
             throw new IllegalStateException("call setDefaultContentId first");
         }
         openFragment(fragment, this.contentId, backToCurrentFragment, layoutType, true);
+    }
+
+    public void openFragment(Fragment fragment, LayoutType layoutType,
+                             View sharedElement, String transitionName) {
+        openFragment(fragment, true, layoutType, sharedElement, transitionName);
     }
 
     /**
