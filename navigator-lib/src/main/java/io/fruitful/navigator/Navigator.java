@@ -151,6 +151,7 @@ public class Navigator<ActivityType extends FragmentActivity & NavigatorActivity
                              LayoutType layoutType, @AnimRes int enter, @AnimRes int exit,
                              @AnimRes int popEnter, @AnimRes int popExit,
                              View sharedElement, String transitionName) {
+        if (activity == null || activity.isFinishing() || activity.isStateSaved()) return;
         ensureAnimationForFragment(fragment);
         ensureAnimationForFragmentsInBackstack(1);
         FragmentTransaction ft = fragmentManager.beginTransaction();
