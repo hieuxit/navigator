@@ -31,18 +31,23 @@ public class NavigatorFragment extends Fragment implements NavigatorFragmentInte
     }
 
     @Override
+    public boolean isRootFragment() {
+        return false;
+    }
+
+    @Override
     public NavigatorFragmentDispatcher getNavigatorDispatcher() {
         return dispatcher;
     }
 
     @Override
-    public Navigator getParentNavigator() {
-        return dispatcher.getParentNavigator();
+    public Navigator getNavigator() {
+        return dispatcher.getNavigator();
     }
 
     @Override
-    public Navigator getOwnNavigator() {
-        return dispatcher.getOwnNavigator();
+    public Navigator getChildNavigator() {
+        return dispatcher.getChildNavigator();
     }
 
     @Override

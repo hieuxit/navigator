@@ -1,7 +1,5 @@
 package io.fruitful.navigator;
 
-import io.fruitful.navigator.Navigator;
-
 /**
  * Interface for
  */
@@ -9,5 +7,8 @@ import io.fruitful.navigator.Navigator;
 public interface NavigatorActivityInterface {
     boolean isStateSaved();
 
-    Navigator getNavigator();
+    /**
+     * @return Navigator of activity mean RootNavigator
+     */
+    Navigator getRootNavigator();
 }

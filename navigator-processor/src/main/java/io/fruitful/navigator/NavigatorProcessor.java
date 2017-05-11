@@ -33,7 +33,11 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-@SupportedAnnotationTypes("io.fruitful.navigator.HasNavigator")
+import io.fruitful.navigator.annotation.ChildNavigator;
+import io.fruitful.navigator.annotation.Navigator;
+import io.fruitful.navigator.annotation.RootNavigator;
+
+@SupportedAnnotationTypes("io.fruitful.navigator.annotation.HasNavigator")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class NavigatorProcessor extends AbstractProcessor {
 
@@ -57,7 +61,7 @@ public class NavigatorProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        final TypeElement hasNavigatorAnnotation = elementUtils.getTypeElement(HasNavigator.class.getName());
+        final TypeElement hasNavigatorAnnotation = elementUtils.getTypeElement(io.fruitful.navigator.annotation.HasNavigator.class.getName());
         final Set<? extends Element> annotatedHasNavigatorFields = roundEnv.getElementsAnnotatedWith(hasNavigatorAnnotation);
         if (annotatedHasNavigatorFields.isEmpty()) {
             return true;
@@ -85,8 +89,8 @@ public class NavigatorProcessor extends AbstractProcessor {
         }
 
         final TypeElement rootNavigatorAnnotation = elementUtils.getTypeElement(RootNavigator.class.getName());
-        final TypeElement parentNavigatorAnnotation = elementUtils.getTypeElement(ParentNavigator.class.getName());
-        final TypeElement ownNavigatorAnnotation = elementUtils.getTypeElement(OwnNavigator.class.getName());
+        final TypeElement parentNavigatorAnnotation = elementUtils.getTypeElement(Navigator.class.getName());
+        final TypeElement ownNavigatorAnnotation = elementUtils.getTypeElement(ChildNavigator.class.getName());
         final Set<? extends Element> annotatedRootNavigatorFields = roundEnv.getElementsAnnotatedWith(rootNavigatorAnnotation);
         final Set<? extends Element> annotatedParentNavigatorFields = roundEnv.getElementsAnnotatedWith(parentNavigatorAnnotation);
         final Set<? extends Element> annotatedOwnNavigatorFields = roundEnv.getElementsAnnotatedWith(ownNavigatorAnnotation);
@@ -189,8 +193,8 @@ public class NavigatorProcessor extends AbstractProcessor {
             builder.addStatement("$T.$N($N.$N, $N.$N($N), $N.$N($N), $N.$N($N))", binderClass, METHOD_BIND_NAME,
                     HOST_NAME, element.getSimpleName(),
                     KIND, "getRootNavigator", HOST_NAME,
-                    KIND, "getParentNavigator", HOST_NAME,
-                    KIND, "getOwnNavigator", HOST_NAME);
+                    KIND, "getNavigator", HOST_NAME,
+                    KIND, "getChildNavigator", HOST_NAME);
         }
         return builder.build();
     }
@@ -203,9 +207,10 @@ public class NavigatorProcessor extends AbstractProcessor {
             List<? extends AnnotationMirror> annotations = element.getAnnotationMirrors();
             for (AnnotationMirror annotation : annotations) {
                 TypeName annotationType = TypeName.get(annotation.getAnnotationType());
-                if (annotationType.equals(TypeName.get(RootNavigator.class))) index = 0;
-                if (annotationType.equals(TypeName.get(ParentNavigator.class))) index = 1;
-                if (annotationType.equals(TypeName.get(OwnNavigator.class))) index = 2;
+                if (annotationType.equals(TypeName.get(io.fruitful.navigator.annotation.RootNavigator.class)))
+                    index = 0;
+                if (annotationType.equals(TypeName.get(Navigator.class))) index = 1;
+                if (annotationType.equals(TypeName.get(ChildNavigator.class))) index = 2;
             }
             builder.addStatement("$N = $N", HOST_NAME + "." + element.getSimpleName(), NAVIGATOR_ARRAY_NAME + "[" + index + "]");
         }

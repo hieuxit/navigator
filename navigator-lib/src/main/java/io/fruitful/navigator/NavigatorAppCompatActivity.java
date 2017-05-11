@@ -23,8 +23,8 @@ public class NavigatorAppCompatActivity extends AppCompatActivity implements Nav
     }
 
     @Override
-    public Navigator getNavigator() {
-        return dispatcher.getNavigator();
+    public Navigator getRootNavigator() {
+        return dispatcher.getRootNavigator();
     }
 
     @Override

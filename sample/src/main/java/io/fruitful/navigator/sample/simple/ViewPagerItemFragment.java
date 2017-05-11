@@ -49,12 +49,12 @@ public class ViewPagerItemFragment extends NavigatorFragment implements View.OnC
             case R.id.bt_add_inside:
                 // open inside current fragment must be use a container in fragment layout
                 // here we use R.id.sub_content
-                getOwnNavigator().openFragment(fragment, R.id.sub_content, true, LayoutType.ADD,
+                getChildNavigator().openFragment(fragment, R.id.sub_content, true, LayoutType.ADD,
                         animEnter, animExit, animPopEnter, animPopExit);
                 break;
 
             case R.id.bt_replace_inside:
-                getOwnNavigator().openFragment(fragment, R.id.sub_content, true, LayoutType.REPLACE,
+                getChildNavigator().openFragment(fragment, R.id.sub_content, true, LayoutType.REPLACE,
                         animEnter, animExit, animPopEnter, animPopExit);
                 break;
 

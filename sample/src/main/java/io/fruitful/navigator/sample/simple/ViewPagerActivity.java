@@ -17,7 +17,7 @@ public class ViewPagerActivity extends NavigatorFragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-        getNavigator().openFragment(ViewPagerFragment.newInstance(), R.id.content, true, LayoutType.ADD,
+        getRootNavigator().openFragment(ViewPagerFragment.newInstance(), R.id.content, true, LayoutType.ADD,
                 0, 0, 0, 0);
     }
 }

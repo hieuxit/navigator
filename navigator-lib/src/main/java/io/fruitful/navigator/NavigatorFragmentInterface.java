@@ -6,13 +6,31 @@ package io.fruitful.navigator;
 
 public interface NavigatorFragmentInterface {
 
+    /**
+     * @return True if fragment need 'back pressed' otherwise return False
+     */
     boolean handleBackIfNeeded();
 
-    Navigator getOwnNavigator();
+    /**
+     * @return Navigator for fragment to open another fragment inside
+     */
+    Navigator getChildNavigator();
 
-    Navigator getParentNavigator();
+    /**
+     * @return Navigator of root fragment - main navigator to open chain of Fragment
+     */
+    Navigator getNavigator();
 
+    /**
+     * @return Navigator of Activity
+     */
     Navigator getRootNavigator();
+
+    /**
+     * @return True if fragment is root fragment that use as a container
+     * and open a chain of other fragments. It means, this fragment own {@link }
+     */
+    boolean isRootFragment();
 
     NavigatorFragmentDispatcher getNavigatorDispatcher();
 }

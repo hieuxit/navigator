@@ -3,7 +3,7 @@ package io.fruitful.navigator.sample;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import io.fruitful.navigator.HasNavigator;
+import io.fruitful.navigator.annotation.HasNavigator;
 import io.fruitful.navigator.NavigatorFragment;
 import io.fruitful.navigator.sample.viewmodel.FragmentViewModel;
 

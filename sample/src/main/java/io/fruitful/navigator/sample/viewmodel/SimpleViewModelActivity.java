@@ -4,7 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import io.fruitful.navigator.HasNavigator;
+import io.fruitful.navigator.annotation.HasNavigator;
 import io.fruitful.navigator.NavigatorFragmentActivity;
 import io.fruitful.navigator.sample.R;
 import io.fruitful.navigator.sample.databinding.ActivitySimpleViewModelBinding;

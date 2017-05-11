@@ -13,7 +13,7 @@ import io.fruitful.navigator.internal.NavigatorOwnerKind;
 
 public class NavigatorFragmentDispatcher<FragmentType extends Fragment & NavigatorFragmentInterface> {
 
-    private Navigator navigator;
+    private Navigator childNavigator;
     private FragmentType fragment;
 
     /**
@@ -23,7 +23,7 @@ public class NavigatorFragmentDispatcher<FragmentType extends Fragment & Navigat
 
     public void onActivityCreated(FragmentType fragment) {
         this.fragment = fragment;
-        this.navigator = Navigator.fromFragment(fragment);
+        this.childNavigator = Navigator.fromFragment(fragment);
         NavigatorManager.emitBindHasNavigator(fragment, NavigatorOwnerKind.NAVIGATOR_FRAGMENT);
     }
 
@@ -38,26 +38,37 @@ public class NavigatorFragmentDispatcher<FragmentType extends Fragment & Navigat
     public Navigator getRootNavigator() {
         Activity activity = fragment.getActivity();
         if (activity instanceof NavigatorActivityInterface) {
-            return ((NavigatorActivityInterface) activity).getNavigator();
+            return ((NavigatorActivityInterface) activity).getRootNavigator();
         }
         return null;
     }
 
-    public Navigator getParentNavigator() {
-        Fragment parentFragment = fragment.getParentFragment();
-        if (parentFragment instanceof NavigatorFragmentInterface) {
-            return ((NavigatorFragmentInterface) parentFragment).getOwnNavigator();
+    /**
+     * Find the root fragment and return it's navigator
+     *
+     * @return Navigator of root fragment
+     */
+    public Navigator getNavigator() {
+        Fragment parentFragment = fragment;
+        while (parentFragment != null) {
+            if (parentFragment instanceof NavigatorFragmentInterface) {
+                NavigatorFragmentInterface navFragment = (NavigatorFragmentInterface) parentFragment;
+                if (navFragment.isRootFragment()) {
+                    return navFragment.getChildNavigator();
+                }
+            }
+            parentFragment = parentFragment.getParentFragment();
         }
         return null;
     }
 
-    public Navigator getOwnNavigator() {
-        return navigator;
+    public Navigator getChildNavigator() {
+        return childNavigator;
     }
 
     public void onDestroy() {
-        if (navigator != null) {
-            navigator.clean();
+        if (childNavigator != null) {
+            childNavigator.clean();
         }
     }
 

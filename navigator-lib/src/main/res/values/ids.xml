@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="navigator_root_content" type="id"></item>
+    <item name="navigator_content" type="id"></item>
+</resources>

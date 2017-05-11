@@ -1,9 +1,8 @@
 package io.fruitful.navigator.sample.viewmodel;
 
-import io.fruitful.navigator.Navigator;
-import io.fruitful.navigator.OwnNavigator;
-import io.fruitful.navigator.ParentNavigator;
-import io.fruitful.navigator.RootNavigator;
+import io.fruitful.navigator.annotation.ChildNavigator;
+import io.fruitful.navigator.annotation.Navigator;
+import io.fruitful.navigator.annotation.RootNavigator;
 
 /**
  * Created by hieuxit on 5/27/16.
@@ -11,12 +10,12 @@ import io.fruitful.navigator.RootNavigator;
 public class FragmentViewModel {
 
     @RootNavigator
-    Navigator mRootNavigator;
+    io.fruitful.navigator.Navigator mRootNavigator;
 
-    @ParentNavigator
-    Navigator mParentNavigator;
+    @Navigator
+    io.fruitful.navigator.Navigator mNavigator;
 
-    @OwnNavigator
-    Navigator mOwnNavigator;
+    @ChildNavigator
+    io.fruitful.navigator.Navigator mOwnNavigator;
 
 }

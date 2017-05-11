@@ -23,8 +23,8 @@ public class NavigatorFragmentActivity extends FragmentActivity implements Navig
     }
 
     @Override
-    public Navigator getNavigator() {
-        return dispatcher.getNavigator();
+    public Navigator getRootNavigator() {
+        return dispatcher.getRootNavigator();
     }
 
     @Override

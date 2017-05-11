@@ -12,12 +12,13 @@ import io.fruitful.navigator.internal.NavigatorOwnerKind;
 public class NavigatorActivityDispatcher<ActivityType extends FragmentActivity & NavigatorActivityInterface> {
 
     private boolean isStateSaved;
-    private Navigator navigator;
+    private Navigator rootNavigator;
     private ActivityType activity;
 
     public void onCreate(ActivityType activity) {
         this.activity = activity;
-        this.navigator = Navigator.fromActivity(activity);
+        this.rootNavigator = Navigator.fromActivity(activity);
+        this.rootNavigator.setDefaultContentId(R.id.navigator_root_content);
         NavigatorManager.emitBindHasNavigator(activity, NavigatorOwnerKind.NAVIGATOR_ACTIVITY);
     }
 
@@ -30,14 +31,14 @@ public class NavigatorActivityDispatcher<ActivityType extends FragmentActivity &
     }
 
     public void onDestroy() {
-        if (navigator != null) {
-            navigator.clean();
-            navigator = null;
+        if (rootNavigator != null) {
+            rootNavigator.clean();
+            rootNavigator = null;
         }
     }
 
     public void onBackPressed() {
-        if (navigator != null && !navigator.goBack(false) && navigator.isRoot()) {
+        if (rootNavigator != null && !rootNavigator.goBack(false) && rootNavigator.isRoot()) {
             activity.finish();
         }
     }
@@ -46,7 +47,7 @@ public class NavigatorActivityDispatcher<ActivityType extends FragmentActivity &
         return this.isStateSaved;
     }
 
-    public Navigator getNavigator() {
-        return navigator;
+    public Navigator getRootNavigator() {
+        return rootNavigator;
     }
 }

@@ -43,8 +43,8 @@ public class ViewPagerFragment extends NavigatorFragment {
     @Override
     public boolean handleBackIfNeeded() {
         NavigatorFragment fragment = pagerAdapter.getFragments().get(viewPager.getCurrentItem());
-        if (!fragment.getOwnNavigator().isBackStackEmpty()) {
-            fragment.getOwnNavigator().goBack(false);
+        if (!fragment.getChildNavigator().isBackStackEmpty()) {
+            fragment.getChildNavigator().goBack(false);
             return true;
         }
         return super.handleBackIfNeeded();

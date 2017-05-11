@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import io.fruitful.navigator.LayoutType;
 import io.fruitful.navigator.NavigatorFragment;
 import io.fruitful.navigator.sample.R;
 
@@ -16,7 +17,7 @@ import io.fruitful.navigator.sample.R;
  * Created by hieuxit on 6/12/16.
  */
 
-public class CharacterFragment extends NavigatorFragment {
+public class CharacterFragment extends NavigatorFragment implements View.OnClickListener {
 
     int backgroundColor;
 
@@ -42,6 +43,7 @@ public class CharacterFragment extends NavigatorFragment {
             }
         }
         view.setBackgroundColor(backgroundColor);
+        view.findViewById(R.id.bt_add).setOnClickListener(this);
         return view;
     }
 
@@ -49,5 +51,10 @@ public class CharacterFragment extends NavigatorFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("backgroundColor", backgroundColor);
+    }
+
+    @Override
+    public void onClick(View v) {
+        getNavigator().openFragment(CharacterFragment.newInstance('w'), LayoutType.ADD, true);
     }
 }

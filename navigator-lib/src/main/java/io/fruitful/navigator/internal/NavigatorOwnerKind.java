@@ -17,35 +17,35 @@ public enum NavigatorOwnerKind {
         }
 
         @Override
-        public Navigator getOwnNavigator(Object owner) {
-            return ((NavigatorFragmentInterface) owner).getOwnNavigator();
+        public Navigator getChildNavigator(Object owner) {
+            return ((NavigatorFragmentInterface) owner).getChildNavigator();
         }
 
         @Override
-        public Navigator getParentNavigator(Object owner) {
-            return ((NavigatorFragmentInterface) owner).getParentNavigator();
+        public Navigator getNavigator(Object owner) {
+            return ((NavigatorFragmentInterface) owner).getNavigator();
         }
     },
     NAVIGATOR_ACTIVITY {
         @Override
         public Navigator getRootNavigator(Object owner) {
-            return ((NavigatorActivityInterface) owner).getNavigator();
+            return ((NavigatorActivityInterface) owner).getRootNavigator();
         }
 
         @Override
-        public Navigator getOwnNavigator(Object owner) {
-            return ((NavigatorActivityInterface) owner).getNavigator();
+        public Navigator getChildNavigator(Object owner) {
+            return ((NavigatorActivityInterface) owner).getRootNavigator();
         }
 
         @Override
-        public Navigator getParentNavigator(Object owner) {
+        public Navigator getNavigator(Object owner) {
             return null;
         }
     };
 
     public abstract Navigator getRootNavigator(Object owner);
 
-    public abstract Navigator getOwnNavigator(Object owner);
+    public abstract Navigator getChildNavigator(Object owner);
 
-    public abstract Navigator getParentNavigator(Object owner);
+    public abstract Navigator getNavigator(Object owner);
 }

@@ -5,7 +5,7 @@ import android.databinding.Bindable;
 
 import io.fruitful.navigator.LayoutType;
 import io.fruitful.navigator.Navigator;
-import io.fruitful.navigator.RootNavigator;
+import io.fruitful.navigator.annotation.RootNavigator;
 import io.fruitful.navigator.sample.R;
 import io.fruitful.navigator.sample.simple.CharacterFragment;
 
